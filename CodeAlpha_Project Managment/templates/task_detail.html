@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block title %}{{ task.title }} — {{ project.name }}{% endblock %}
+
+{% block content %}
+<div class="task-detail-page">
+    <div class="breadcrumb">
+        <a href="{{ url_for('dashboard') }}">Dashboard</a> →
+        <a href="{{ url_for('project_detail', project_id=project.id) }}">{{ project.name }}</a> →
+        <span>{{ task.title }}</span>
+    </div>
+
+    <div class="task-detail card">
+        <h1>{{ task.title }}</h1>
+        <p class="task-meta">
+            Status: <strong>{{ task.status }}</strong>
+            {% if task.assignee_name %}
+                · Assigned to: <strong>{{ task.assignee_name }}</strong>
+            {% endif %}
+        </p>
+        {% if task.description %}
+            <div class="task-description">
+                <h3>Description</h3>
+                <p>{{ task.description }}</p>
+            </div>
+        {% endif %}
+
+        <!-- Update status -->
+        <div class="task-actions">
+            <form method="post" action="{{ url_for('update_task_status', project_id=project.id, task_id=task.id) }}" class="status-form inline">
+                <label for="new_status">Change status:</label>
+                <select name="status" id="new_status" onchange="this.form.submit()">
+                    {% for s in statuses %}
+                        <option value="{{ s }}" {% if task.status == s %}selected{% endif %}>{{ s }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+
+    <!-- Comments -->
+    <div class="comments-section card">
+        <h2>Comments</h2>
+        <form method="post" action="{{ url_for('add_comment', project_id=project.id, task_id=task.id) }}" class="comment-form">
+            <textarea name="content" rows="3" required placeholder="Write a comment..."></textarea>
+            <button type="submit" class="btn btn-primary">Add Comment</button>
+        </form>
+
+        <ul class="comment-list">
+            {% for comment in comments %}
+                <li class="comment">
+                    <p class="comment-content">{{ comment.content }}</p>
+                    <p class="comment-meta">{{ comment.username }} · {{ comment.created_at }}</p>
+                </li>
+            {% else %}
+                <li class="no-comments">No comments yet. Be the first to comment!</li>
+            {% endfor %}
+        </ul>
+    </div>
+
+    <p><a href="{{ url_for('project_detail', project_id=project.id) }}" class="btn btn-secondary">← Back to Project</a></p>
+</div>
+{% endblock %}

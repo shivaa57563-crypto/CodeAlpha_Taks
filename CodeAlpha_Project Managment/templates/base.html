@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Project Manager{% endblock %}</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <!-- Flash messages: show success/error/info from the backend -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-messages">
+                {% for category, message in messages %}
+                    <div class="flash flash-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <header class="main-header">
+        <a href="{{ url_for('dashboard') if session.get('user_id') else url_for('login') }}" class="logo">Project Manager</a>
+        <nav>
+            {% if user %}
+                <span class="user-name">Hello, {{ user.username }}</span>
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('create_project') }}">New Project</a>
+                <a href="{{ url_for('join_project') }}">Join Project</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% endif %}
+        </nav>
+    </header>
+
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="main-footer">
+        <p>Project Management Tool — Flask + SQLite</p>
+    </footer>
+
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    {% block scripts %}{% endblock %}
+</body>
+</html>

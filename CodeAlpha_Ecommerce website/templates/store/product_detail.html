@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load store_tags %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
+{% block content %}
+<div class="product-detail">
+    <div class="product-detail-image">
+        {% if product.image %}
+        <img src="{{ product.image.url }}" alt="{{ product.name }}">
+        {% else %}
+        <img src="https://via.placeholder.com/400?text=No+Image" alt="{{ product.name }}">
+        {% endif %}
+    </div>
+    <div class="product-detail-info">
+        <h1>{{ product.name }}</h1>
+        <p class="product-price large">{{ product.price|indian_currency }}</p>
+        {% if product.description %}
+        <p class="product-description">{{ product.description }}</p>
+        {% endif %}
+        <form action="{% url 'store:add_to_cart' product.id %}" method="post" class="add-to-cart-form-inline">
+            {% csrf_token %}
+            {{ form.quantity }}
+            <button type="submit" class="btn btn-primary">Add to Cart</button>
+        </form>
+    </div>
+</div>
+<a href="{% url 'store:home' %}" class="back-link">← Back to products</a>
+{% endblock %}

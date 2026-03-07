@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% block title %}Room {{ room_code }} - Video Meet{% endblock %}
+{% block content %}
+<div class="room-container">
+    <header class="room-header">
+        <h1>Room: {{ room_code }}</h1>
+        <p>{{ username }}</p>
+        <a href="{{ url_for('main.lobby') }}" class="btn btn-small">Leave Room</a>
+    </header>
+
+    <div class="room-main">
+        <!-- Video section -->
+        <div class="video-section">
+            <div class="video-grid" id="videoGrid">
+                <div class="video-container local">
+                    <video id="localVideo" autoplay muted playsinline></video>
+                    <span class="video-label">You</span>
+                </div>
+                <div id="remoteVideos" class="remote-videos"></div>
+            </div>
+            <div class="video-controls">
+                <button id="toggleMic" class="ctrl-btn" title="Mute/Unmute">🎤</button>
+                <button id="toggleCamera" class="ctrl-btn" title="Camera on/off">📷</button>
+                <button id="screenShareBtn" class="ctrl-btn" title="Share screen">🖥️</button>
+            </div>
+        </div>
+
+        <!-- Sidebar: Chat + Whiteboard -->
+        <aside class="room-sidebar">
+            <div class="sidebar-tabs">
+                <button class="tab-btn active" data-tab="chat">Chat</button>
+                <button class="tab-btn" data-tab="whiteboard">Whiteboard</button>
+            </div>
+            <div id="chatPanel" class="tab-content active">
+                <div class="chat-messages" id="chatMessages"></div>
+                <form id="chatForm" class="chat-form">
+                    <input type="text" id="chatInput" placeholder="Type a message..." autocomplete="off">
+                    <button type="submit">Send</button>
+                </form>
+            </div>
+            <div id="whiteboardPanel" class="tab-content">
+                <div class="whiteboard-toolbar">
+                    <button class="wb-btn" data-color="black">⬛</button>
+                    <button class="wb-btn" data-color="red">🟥</button>
+                    <button class="wb-btn" data-color="blue">🟦</button>
+                    <button class="wb-btn" data-color="green">🟩</button>
+                    <button id="wbClear" class="wb-btn">Clear</button>
+                </div>
+                <canvas id="whiteboard" width="400" height="300"></canvas>
+            </div>
+        </aside>
+    </div>
+</div>
+
+<script>
+    window.ROOM_CODE = "{{ room_code }}";
+    window.USERNAME = "{{ username }}";
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.min.js"></script>
+<script src="{{ url_for('static', filename='js/webrtc.js') }}"></script>
+<script src="{{ url_for('static', filename='js/chat.js') }}"></script>
+<script src="{{ url_for('static', filename='js/whiteboard.js') }}"></script>
+<script src="{{ url_for('static', filename='js/main.js') }}"></script>
+{% endblock %}

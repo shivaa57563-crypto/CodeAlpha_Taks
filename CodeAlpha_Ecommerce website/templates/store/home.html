@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load store_tags %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h1>Welcome to Our Store</h1>
+    <p>Browse our collection of products below.</p>
+</div>
+
+<div class="product-grid">
+    {% for product in products %}
+    <article class="product-card">
+        <a href="{% url 'store:product_detail' product.id %}" class="product-link">
+            <div class="product-image-wrapper">
+                {% if product.image %}
+                <img src="{{ product.image.url }}" alt="{{ product.name }}" class="product-image">
+                {% else %}
+                <img src="https://via.placeholder.com/300?text=No+Image" alt="{{ product.name }}" class="product-image">
+                {% endif %}
+            </div>
+            <h2 class="product-name">{{ product.name }}</h2>
+            <p class="product-price">{{ product.price|indian_currency }}</p>
+        </a>
+        <form action="{% url 'store:add_to_cart' product.id %}" method="post" class="add-to-cart-form">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'store:home' %}">
+            <button type="submit" class="btn btn-primary btn-sm">Add to Cart</button>
+        </form>
+    </article>
+    {% empty %}
+    <p class="empty-state">No products available yet. Add some in the admin panel!</p>
+    {% endfor %}
+</div>
+{% endblock %}

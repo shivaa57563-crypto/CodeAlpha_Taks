@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}New Project — Project Manager{% endblock %}
+
+{% block content %}
+<div class="form-page">
+    <h1>Create a New Project</h1>
+    <p class="page-desc">Give your project a name and optional description. You'll be added as a member automatically.</p>
+
+    <form class="card-form" method="post" action="{{ url_for('create_project') }}">
+        <label for="name">Project Name *</label>
+        <input type="text" id="name" name="name" value="{{ name or '' }}" required placeholder="e.g. Website Redesign">
+
+        <label for="description">Description (optional)</label>
+        <textarea id="description" name="description" rows="3" placeholder="Brief description of the project">{{ description or '' }}</textarea>
+
+        <div class="form-actions">
+            <button type="submit" class="btn btn-primary">Create Project</button>
+            <a href="{{ url_for('dashboard') }}" class="btn btn-secondary">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

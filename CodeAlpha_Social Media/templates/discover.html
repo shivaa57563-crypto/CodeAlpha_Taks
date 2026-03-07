@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Discover - Mini Social{% endblock %}
+
+{% block content %}
+<h2 style="margin-bottom: 1rem;">Discover Users</h2>
+<p style="margin-bottom: 1rem; color: #7f8c8d;">Click a username to view their profile and follow them.</p>
+<div class="card">
+    <ul style="list-style: none;">
+        {% for u in users %}
+        <li style="padding: 0.5rem 0; border-bottom: 1px solid #eee;">
+            <a href="{{ url_for('profile', user_id=u.id) }}">{{ u.username }}</a>
+        </li>
+        {% else %}
+        <li>No other users yet. Create another account to test follow!</li>
+        {% endfor %}
+    </ul>
+</div>
+{% endblock %}

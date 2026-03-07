@@ -1,0 +1,7 @@
+# Real-time Communication Web App - Dependencies
+Flask==3.0.0
+Flask-SocketIO==5.3.6
+Flask-Login==0.6.3
+eventlet==0.35.2
+python-socketio==5.11.0
+python-engineio==4.8.1

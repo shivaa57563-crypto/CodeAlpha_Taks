@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}{{ profile_user.username }} - Mini Social{% endblock %}
+
+{% block content %}
+<div class="profile-header card">
+    <h2>{{ profile_user.username }}</h2>
+    <p class="timestamp">{{ profile_user.email }}</p>
+    <div class="profile-stats">
+        <span>{{ profile_user.follower_count }} followers</span>
+        <span>{{ profile_user.following_count }} following</span>
+    </div>
+    {% if profile_user.id != user.id %}
+    <form method="post" action="{{ url_for('follow_user', user_id=profile_user.id) }}" style="margin-top: 1rem;">
+        <button type="submit" class="btn {% if profile_user.is_following %}btn-secondary{% endif %}">
+            {% if profile_user.is_following %}Unfollow{% else %}Follow{% endif %}
+        </button>
+    </form>
+    {% endif %}
+</div>
+
+<h3 style="margin-bottom: 1rem;">Posts</h3>
+{% for post in posts %}
+<div class="card">
+    <div class="post-header">
+        <a href="{{ url_for('profile', user_id=post.user_id) }}"><strong>{{ post.username }}</strong></a>
+        <span class="timestamp">{{ post.created_at }}</span>
+    </div>
+    <div class="post-content">{{ post.content }}</div>
+    <div class="post-actions">
+        <form method="post" action="{{ url_for('toggle_like', post_id=post.id) }}" style="display: inline;">
+            <button type="submit">
+                {% if post.user_liked %}Unlike{% else %}Like{% endif %} ({{ post.like_count }})
+            </button>
+        </form>
+        <span>Comments ({{ post.comment_count }})</span>
+    </div>
+    <div class="comments">
+        {% for c in post.comments %}
+        <div class="comment">
+            <span class="comment-author">{{ c.username }}</span>
+            <span class="timestamp">{{ c.created_at }}</span><br>
+            {{ c.content }}
+        </div>
+        {% endfor %}
+        <form method="post" action="{{ url_for('add_comment', post_id=post.id) }}" style="margin-top: 0.5rem;">
+            <input type="text" name="content" placeholder="Write a comment..." required>
+            <button type="submit" class="btn btn-secondary">Comment</button>
+        </form>
+    </div>
+</div>
+{% else %}
+<p style="text-align: center; color: #7f8c8d;">No posts yet.</p>
+{% endfor %}
+{% endblock %}

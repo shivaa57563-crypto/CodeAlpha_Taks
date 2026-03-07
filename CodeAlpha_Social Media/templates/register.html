@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Register - Mini Social{% endblock %}
+
+{% block content %}
+<div class="auth-container card">
+    <h1>Create Account</h1>
+    <form method="post" action="{{ url_for('register') }}">
+        <label for="username">Username</label>
+        <input type="text" id="username" name="username" required placeholder="Choose a username">
+
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required placeholder="Your email">
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required placeholder="At least 4 characters">
+
+        <label for="confirm_password">Confirm Password</label>
+        <input type="password" id="confirm_password" name="confirm_password" required placeholder="Same as above">
+
+        <button type="submit">Register</button>
+    </form>
+    <p style="margin-top: 1rem; text-align: center;">
+        Already have an account? <a href="{{ url_for('login') }}">Login here</a>
+    </p>
+</div>
+{% endblock %}

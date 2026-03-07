@@ -1,0 +1,67 @@
+{% extends "base.html" %}
+{% block title %}Lobby - Video Meet{% endblock %}
+{% block content %}
+<div class="lobby-container">
+    <header class="lobby-header">
+        <h1>Video Meet</h1>
+        <p>Hello, <strong>{{ username }}</strong>! 
+            <a href="{{ url_for('auth.logout') }}" class="logout-link">Log out</a>
+        </p>
+    </header>
+
+    <div class="lobby-actions">
+        <!-- Create Room -->
+        <div class="lobby-card">
+            <h2>Create a Room</h2>
+            <p>Start a new meeting and share the code with others</p>
+            <button id="createRoomBtn" class="btn btn-primary">Create Room</button>
+            <div id="createResult" class="room-result"></div>
+        </div>
+
+        <!-- Join Room -->
+        <div class="lobby-card">
+            <h2>Join a Room</h2>
+            <p>Enter the room code to join an existing meeting</p>
+            <form id="joinRoomForm">
+                <input type="text" id="roomCodeInput" placeholder="Enter room code" maxlength="6" class="room-input">
+                <button type="submit" class="btn btn-primary">Join Room</button>
+            </form>
+            <div id="joinError" class="error-msg"></div>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.0/socket.io.min.js"></script>
+<script>
+    // Socket connection for lobby
+    const socket = io();
+    const username = "{{ username }}";
+
+    document.getElementById('createRoomBtn').addEventListener('click', function() {
+        this.disabled = true;
+        this.textContent = 'Creating...';
+        socket.emit('create_room');
+    });
+
+    socket.on('room_created', function(data) {
+        const resultDiv = document.getElementById('createResult');
+        resultDiv.innerHTML = `
+            <p>Room created! Code: <strong>${data.room_code}</strong></p>
+            <a href="/room/${data.room_code}" class="btn">Enter Room</a>
+        `;
+        document.getElementById('createRoomBtn').disabled = false;
+        document.getElementById('createRoomBtn').textContent = 'Create Room';
+    });
+
+    document.getElementById('joinRoomForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const roomCode = document.getElementById('roomCodeInput').value.trim().toUpperCase();
+        document.getElementById('joinError').textContent = '';
+        if (roomCode) {
+            window.location.href = '/room/' + roomCode;
+        } else {
+            document.getElementById('joinError').textContent = 'Please enter a room code';
+        }
+    });
+</script>
+{% endblock %}

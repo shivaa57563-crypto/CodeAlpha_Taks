@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — Project Manager{% endblock %}
+
+{% block content %}
+<div class="dashboard-page">
+    <h1>My Projects</h1>
+    <p class="page-desc">Create a new project or open one below to manage tasks.</p>
+
+    <div class="dashboard-actions">
+        <a href="{{ url_for('create_project') }}" class="btn btn-primary">+ New Project</a>
+        <a href="{{ url_for('join_project') }}" class="btn btn-secondary">Join a Project</a>
+    </div>
+
+    {% if projects %}
+        <ul class="project-list">
+            {% for project in projects %}
+                <li class="project-card">
+                    <a href="{{ url_for('project_detail', project_id=project.id) }}" class="project-link">
+                        <h3>{{ project.name }}</h3>
+                        {% if project.description %}
+                            <p class="project-desc">{{ project.description }}</p>
+                        {% endif %}
+                        <p class="project-meta">Owner: {{ project.owner_name }} · ID: {{ project.id }}</p>
+                    </a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="empty-state">You don't have any projects yet. Create one or join a project to get started.</p>
+    {% endif %}
+</div>
+{% endblock %}

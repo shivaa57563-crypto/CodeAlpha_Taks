@@ -1,0 +1,5 @@
+# Django E-Commerce Project Dependencies
+# Install with: pip install -r requirements.txt
+
+Django>=4.2,<5.0
+Pillow>=10.0.0

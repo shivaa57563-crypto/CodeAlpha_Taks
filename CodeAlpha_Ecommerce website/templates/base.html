@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Shop{% endblock %} | E-Commerce Store</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="{% url 'store:home' %}" class="nav-logo">🛒 Shop</a>
+            <ul class="nav-menu">
+                <li><a href="{% url 'store:home' %}">Home</a></li>
+                <li><a href="{% url 'store:cart' %}">Cart {% if cart_item_count %}<span class="cart-badge">{{ cart_item_count }}</span>{% endif %}</a></li>
+                {% if user.is_authenticated %}
+                    <li><a href="{% url 'admin:index' %}">Admin</a></li>
+                    <li>
+                        <form action="{% url 'logout' %}" method="post" class="logout-form">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-link">Logout ({{ user.username }})</button>
+                        </form>
+                    </li>
+                {% else %}
+                    <li><a href="{% url 'login' %}">Login</a></li>
+                    <li><a href="{% url 'store:signup' %}">Sign Up</a></li>
+                {% endif %}
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Flash messages -->
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert alert-{{ message.tags }}">
+            {{ message }}
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <!-- Main content -->
+    <main class="main-content">
+        {% block content %}{% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-container">
+            <p>&copy; 2025 E-Commerce Store. Built with Django.</p>
+        </div>
+    </footer>
+
+    {% block scripts %}{% endblock %}
+</body>
+</html>
